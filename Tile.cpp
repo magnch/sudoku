@@ -3,6 +3,9 @@
 Tile::Tile(TDT4102::Point board_pos, TDT4102::Point pos, int size, int num) : 
 Button(pos, 1.5*size, size, "") {
 
+    if (num > 9 || num < 0) {
+        throw(std::out_of_range("Number " + std::to_string(num) + " not between 0-9"));
+    }
     this->number = num;
     this->is_highlighted = false;
     update();
@@ -34,6 +37,9 @@ void Tile::update() {
 
 // Setter verdien på tilen til det gitte tallet
 void Tile::set(int num) {
+    if (num > 9 || num < 0) {
+        throw(std::out_of_range("Number " + std::to_string(num) + " not between 0-9"));
+    }
     number = num;
     update();
 }

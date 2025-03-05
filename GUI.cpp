@@ -65,7 +65,13 @@ void SudokuWindow::run(std::string board_filename) {
         else {
 
             if(!game_started) {
-                sudoku_board->load_board_from_file(board_filename);
+                try{
+                    sudoku_board->load_board_from_file(board_filename);
+                }
+                catch(const std::ios_base::failure& e) {
+                    std::cerr << "Error: " << e.what() << std::endl;
+                }
+                
                 initialize_tiles();
                 game_started = true;
             }
@@ -85,7 +91,14 @@ void SudokuWindow::initialize_tiles() {
             if(num) {
                 tile->changeable = false; // Kan ikke endre på de forhåndsbestemte tallene
             }
-            tile->set(num);
+            try{
+                tile->set(num);
+            }
+            // Setter tile til 0 hvis den møter på et ugyldig tall
+            catch(const std::out_of_range& e) {
+                std::cerr << "Error: " << e.what() << std::endl
+                          << "Could not load invalid number, tile set to 0" << std::endl;
+            }
         }
     }
 }
@@ -153,7 +166,8 @@ void SudokuWindow::cb_check() {
     }
 }
 
-// Sjekker for input fra tastaturet
+// Sjekker for input fra tastaturet. Registerer om en tast går fra å ikke være trykket
+// inn, til å være trykket inn
 void SudokuWindow::handle_input() {
 
     static bool last_0_state = false;

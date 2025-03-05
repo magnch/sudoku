@@ -96,6 +96,9 @@ bool Sudoku::check_box(int box) {
 void Sudoku::save_board_to_file(std::string filename){
     std::filesystem::path save_file{filename};
     std::ofstream ofs{save_file};
+    if(!ofs) {
+        throw std::ios_base::failure("Could not open file: " + filename);
+    }
 
     for (int row = 0; row < num_rows; row++) {
         for (int col = 0; col < num_cols; col++) {
@@ -109,6 +112,9 @@ void Sudoku::save_board_to_file(std::string filename){
 void Sudoku::load_board_from_file(std::string filename) {
     std::filesystem::path load_file{filename};
     std::ifstream ifs{load_file};
+    if(!ifs) {
+        throw std::ios_base::failure("Could not open file: " + filename);
+    }
     int num;
 
     for (int row = 0; row < num_rows; row++) {
